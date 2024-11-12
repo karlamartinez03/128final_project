@@ -39,9 +39,9 @@ public class LingoMapGame extends Canvas implements Runnable, KeyListener {
         wordMap = new HashMap<>();
         wordMap.put("Hello", "Hola");
         wordMap.put("Thank you", "Gracias");
-        wordMap.put("Goodbye", "Adiós");
+        wordMap.put("Goodbye", "Adios");
         wordMap.put("Please", "Por favor");
-        wordMap.put("Yes", "Sí");
+        wordMap.put("Yes", "Si");
         wordMap.put("No", "No");
         random = new Random();
     }
