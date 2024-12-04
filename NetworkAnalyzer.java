@@ -19,32 +19,33 @@ public class NetworkAnalyzer {
         return centrality;
     }
 
-    public HashMap<User, Integer> calculateShortestPaths(User start) {
-        HashMap<User, Integer> distances = new HashMap<>();
-        PriorityQueue<Map.Entry<User, Integer>> pq = new PriorityQueue<>(Map.Entry.comparingByValue());
+    public HashMap<User, Double> calculateShortestPaths(User start) {
+        HashMap<User, Double> distances = new HashMap<>();
+        PriorityQueue<Map.Entry<User, Double>> pq = new PriorityQueue<>(Map.Entry.comparingByValue());
         Set<User> visited = new HashSet<>();
-
+    
         for (User user : network.getUsers()) {
-            distances.put(user, Integer.MAX_VALUE);
+            distances.put(user, Double.MAX_VALUE); // Initialize with infinity
         }
-        distances.put(start, 0);
-        pq.offer(Map.entry(start, 0));
-
+        distances.put(start, 0.0); // Distance to start is 0
+        pq.offer(Map.entry(start, 0.0)); // Add start node to the priority queue
+    
         while (!pq.isEmpty()) {
-            User current = pq.poll().getKey();
+            User current = pq.poll().getKey(); // Get the user with the smallest distance
             if (!visited.add(current)) continue;
-
+    
             for (Connection conn : network.getConnections(current)) {
                 User neighbor = conn.getUser2();
-                int newDist = distances.get(current) + conn.getWeight();
+                double newDist = distances.get(current) + conn.getWeight(); // Use double weights
                 if (!visited.contains(neighbor) && newDist < distances.get(neighbor)) {
                     distances.put(neighbor, newDist);
-                    pq.offer(Map.entry(neighbor, newDist));
+                    pq.offer(Map.entry(neighbor, newDist)); // Update the queue
                 }
             }
         }
-
+    
         return distances;
     }
+    
 }
 

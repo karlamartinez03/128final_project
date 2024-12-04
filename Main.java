@@ -55,43 +55,46 @@ public class Main {
         try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
             String line;
             boolean isHeader = true;
-
+        
             while ((line = br.readLine()) != null) {
-                // Skip header row
                 if (isHeader) {
                     isHeader = false;
-                    continue;
+                    continue; // Skip header
                 }
-
-                // Parse the CSV line
+        
                 String[] values = line.split(",");
-                String id1 = values[0].trim(); // ID of the first user
-                String name1 = values[1].trim(); // Name of the first user
-                String id2 = values[2].trim(); // ID of the second user
-                String name2 = values[3].trim(); // Name of the second user
-                int weight = Integer.parseInt(values[4].trim()); // Weight of connection
-
-                // Step 2: Add users to the network
-                User user1 = network.getUsers().stream().filter(u -> u.getId().equals(id1)).findFirst()
+                String id1 = values[0].trim();
+                String name1 = values[1].trim();
+                String id2 = values[2].trim();
+                String name2 = values[3].trim();
+                double weight = Double.parseDouble(values[4].trim()); // Changed to double
+        
+                User user1 = network.getUsers().stream()
+                        .filter(u -> u.getId().equals(id1))
+                        .findFirst()
                         .orElseGet(() -> {
                             User newUser = new User(id1, name1);
                             network.addUser(newUser);
                             return newUser;
                         });
-
-                User user2 = network.getUsers().stream().filter(u -> u.getId().equals(id2)).findFirst()
+        
+                User user2 = network.getUsers().stream()
+                        .filter(u -> u.getId().equals(id2))
+                        .findFirst()
                         .orElseGet(() -> {
                             User newUser = new User(id2, name2);
                             network.addUser(newUser);
                             return newUser;
                         });
-
-                // Step 3: Add the connection
-                network.addConnection(user1, user2, weight);
+        
+                network.addConnection(user1, user2, weight); // Add connection with double weight
             }
         } catch (IOException e) {
             System.err.println("Error reading the CSV file: " + e.getMessage());
+        } catch (NumberFormatException e) {
+            System.err.println("Error parsing a number: " + e.getMessage());
         }
+        
 
         // Step 4: Perform analysis and visualization
         CommunityDetector detector = new CommunityDetector(network.getUsers());

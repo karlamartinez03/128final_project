@@ -14,7 +14,7 @@ public class SocialNetwork {
         connections.putIfAbsent(user, new ArrayList<>());
     }
 
-    public void addConnection(User user1, User user2, int weight) {
+    public void addConnection(User user1, User user2, double weight) {
         Connection connection = new Connection(user1, user2, weight);
         connections.get(user1).add(connection);
         connections.get(user2).add(new Connection(user2, user1, weight)); // Symmetric
