@@ -1,8 +1,3 @@
-
-import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
-
 public class GraphVisualizer {
     // A method to visualize the network in a basic way (console-based or simple display)
     public void displayNetwork(SocialNetwork network) {
