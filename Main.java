@@ -117,7 +117,8 @@ public class Main {
         }
 
         GraphVisualizer visualizer = new GraphVisualizer();
-        visualizer.displayNetwork(network);
+        visualizer.visualizeGraphically(network);
+
     }
 }
 
