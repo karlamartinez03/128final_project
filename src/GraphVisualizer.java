@@ -1,3 +1,4 @@
+package src;
 // public class GraphVisualizer {
 //     // A method to visualize the network in a basic way (console-based or simple display)
 //     public void displayNetwork(SocialNetwork network) {
@@ -20,9 +21,8 @@
 //     }
 
 // }
-
 import edu.macalester.graphics.*;
-import edu.macalester.graphics.events.MouseEvent;
+import edu.macalester.graphics.events.*;
 
 import java.awt.Color;
 import java.util.HashMap;
@@ -30,8 +30,8 @@ import java.util.List;
 import java.util.Random;
 
 public class GraphVisualizer {
-    private static final double WIDTH = 800;
-    private static final double HEIGHT = 600;
+    private static final int WIDTH = 800;
+    private static final int HEIGHT = 600;
     private static final double NODE_RADIUS = 20;
 
     // Method to create a graphical visualization
@@ -63,7 +63,7 @@ public class GraphVisualizer {
                 // Display weight in the middle of the edge
                 double midX = (userPoint.getX() + neighborPoint.getX()) / 2;
                 double midY = (userPoint.getY() + neighborPoint.getY()) / 2;
-                Text weightText = new Text(String.valueOf(connection.getWeight()), midX, midY);
+                GraphicsText weightText = new GraphicsText(String.valueOf(connection.getWeight()), midX, midY);
                 weightText.setFontSize(12);
                 weightText.setFillColor(Color.DARK_GRAY);
                 canvas.add(weightText);
@@ -85,22 +85,24 @@ public class GraphVisualizer {
             canvas.add(node);
 
             // Add the user name inside the circle
-            Text userName = new Text(user.getName(), position.getX(), position.getY());
+            GraphicsText userName = new GraphicsText(user.getName(), position.getX(), position.getY());
             userName.setFontSize(10);
-            userName.setAnchor(Text.Anchor.CENTER);
+            userName.setAnchor(userName.getCenter());
             canvas.add(userName);
         }
 
         // Step 4: Add interactivity (e.g., mouse click to highlight a node)
-        canvas.onMouseDown(event -> handleMouseClick(event, userPositions, canvas));
+        canvas.onMouseDown(event -> 
+        
+            handleMouseClick(event, userPositions, canvas));
     }
 
-    private void handleMouseClick(MouseEvent event, HashMap<User, Point> userPositions, CanvasWindow canvas) {
+    private void handleMouseClick(MouseButtonEvent event, HashMap<User, Point> userPositions, CanvasWindow canvas) {
         Point clickPoint = new Point(event.getPosition().getX(), event.getPosition().getY());
 
         for (User user : userPositions.keySet()) {
             Point userPosition = userPositions.get(user);
-            double distance = clickPoint.distanceTo(userPosition);
+            double distance = clickPoint.distance(userPosition);
 
             if (distance <= NODE_RADIUS) {
                 // Highlight the selected user and their connections
@@ -125,13 +127,12 @@ public class GraphVisualizer {
         canvas.add(selectedNode);
 
         // Add user name
-        Text userName = new Text(user.getName(), userPoint.getX(), userPoint.getY());
+        GraphicsText userName = new GraphicsText(user.getName(), userPoint.getX(), userPoint.getY());
         userName.setFontSize(10);
-        userName.setAnchor(Text.Anchor.CENTER);
+        userName.setAnchor(userName.getCenter());
         canvas.add(userName);
 
         // Draw their connections
         // (This can be expanded to show only the user's immediate neighbors)
     }
 }
-
