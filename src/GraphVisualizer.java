@@ -1,4 +1,3 @@
-package src;
 // public class GraphVisualizer {
 //     // A method to visualize the network in a basic way (console-based or simple display)
 //     public void displayNetwork(SocialNetwork network) {

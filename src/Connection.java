@@ -1,5 +1,3 @@
-package src;
-
 public class Connection {
     private User user1;
     private User user2;
