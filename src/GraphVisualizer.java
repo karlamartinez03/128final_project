@@ -25,7 +25,6 @@ import edu.macalester.graphics.events.*;
 
 import java.awt.Color;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Random;
 
 public class GraphVisualizer {
@@ -93,26 +92,27 @@ public class GraphVisualizer {
         // Step 4: Add interactivity (e.g., mouse click to highlight a node)
         canvas.onMouseDown(event -> 
         
-            handleMouseClick(event, userPositions, canvas));
+            handleMouseClick(event, userPositions, canvas, network));
     }
 
-    private void handleMouseClick(MouseButtonEvent event, HashMap<User, Point> userPositions, CanvasWindow canvas) {
+    private void handleMouseClick(MouseButtonEvent event, HashMap<User, Point> userPositions, CanvasWindow canvas, SocialNetwork network) {
         Point clickPoint = new Point(event.getPosition().getX(), event.getPosition().getY());
-
+    
         for (User user : userPositions.keySet()) {
             Point userPosition = userPositions.get(user);
             double distance = clickPoint.distance(userPosition);
-
+    
             if (distance <= NODE_RADIUS) {
-                // Highlight the selected user and their connections
+                // Clear the canvas and highlight the selected user and their connections
                 canvas.removeAll();
-                highlightUser(user, userPositions, canvas);
+                highlightUser(user, userPositions, canvas, network);
                 break;
             }
         }
     }
+    
 
-    private void highlightUser(User user, HashMap<User, Point> userPositions, CanvasWindow canvas) {
+    private void highlightUser(User user, HashMap<User, Point> userPositions, CanvasWindow canvas, SocialNetwork network) {
         Point userPoint = userPositions.get(user);
 
         // Draw the selected user
@@ -131,7 +131,25 @@ public class GraphVisualizer {
         userName.setAnchor(userName.getCenter());
         canvas.add(userName);
 
-        // Draw their connections
-        // (This can be expanded to show only the user's immediate neighbors)
+        // Draw the user's connections
+    for (Connection connection : network.getConnections(user)) {
+        User neighbor = connection.getUser2();
+        Point neighborPoint = userPositions.get(neighbor);
+
+        if (neighborPoint != null) {
+            // Draw a line between the user and their neighbor
+            Line connectionLine = new Line(userPoint, neighborPoint);
+            connectionLine.setStrokeWidth(2);
+            connectionLine.setStrokeColor(Color.BLUE);
+            canvas.add(connectionLine);
+
+            // Optionally, add the weight of the connection
+            double midX = (userPoint.getX() + neighborPoint.getX()) / 2;
+            double midY = (userPoint.getY() + neighborPoint.getY()) / 2;
+            GraphicsText connectionWeight = new GraphicsText(String.valueOf(connection.getWeight()), midX, midY);
+            connectionWeight.setFontSize(10);
+            connectionWeight.setAnchor(connectionWeight.getCenter());
+            canvas.add(connectionWeight);
     }
 }
+    }}
