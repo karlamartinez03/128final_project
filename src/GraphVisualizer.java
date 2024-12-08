@@ -95,27 +95,65 @@ public class GraphVisualizer {
             handleMouseClick(event, userPositions, canvas, network));
     }
 
+    private boolean isFilteredView = false; // Tracks whether we're in filtered or full view
+
     private void handleMouseClick(MouseButtonEvent event, HashMap<User, Point> userPositions, CanvasWindow canvas, SocialNetwork network) {
         Point clickPoint = new Point(event.getPosition().getX(), event.getPosition().getY());
+    
+        if (isFilteredView) {
+            // Reset to full view
+            canvas.removeAll();
+            drawGraph(userPositions, network, canvas);
+            isFilteredView = false;
+            return;
+        }
     
         for (User user : userPositions.keySet()) {
             Point userPosition = userPositions.get(user);
             double distance = clickPoint.distance(userPosition);
     
             if (distance <= NODE_RADIUS) {
-                // Clear the canvas and highlight the selected user and their connections
+                // Highlight the selected user and their connections
                 canvas.removeAll();
                 highlightUser(user, userPositions, canvas, network);
-                break;
+                isFilteredView = true;
+                return;
             }
         }
     }
+
+    private void drawGraph(HashMap<User, Point> userPositions, SocialNetwork network, CanvasWindow canvas) {
+        // Draw all nodes and their connections
+        for (User user : userPositions.keySet()) {
+            Point userPoint = userPositions.get(user);
     
+            // Draw connections
+            for (Connection connection : network.getConnections(user)) {
+                User neighbor = connection.getUser2();
+                Point neighborPoint = userPositions.get(neighbor);
+    
+                Line line = new Line(userPoint.getX(), userPoint.getY(), neighborPoint.getX(), neighborPoint.getY());
+                line.setStrokeColor(Color.LIGHT_GRAY);
+                canvas.add(line);
+            }
+            
+    
+            // Draw node
+            Ellipse node = new Ellipse(userPoint.getX() - NODE_RADIUS, userPoint.getY() - NODE_RADIUS, 2 * NODE_RADIUS, 2 * NODE_RADIUS);
+            node.setFillColor(Color.BLUE);
+            canvas.add(node);
+    
+            // Add name
+            GraphicsText userName = new GraphicsText(user.getName(), userPoint.getX(), userPoint.getY() - 10);
+            userName.setFontSize(10);
+            canvas.add(userName);
+        }
+    }
 
     private void highlightUser(User user, HashMap<User, Point> userPositions, CanvasWindow canvas, SocialNetwork network) {
         Point userPoint = userPositions.get(user);
-
-        // Draw the selected user
+    
+        // Highlight the selected user
         Ellipse selectedNode = new Ellipse(
             userPoint.getX() - NODE_RADIUS, 
             userPoint.getY() - NODE_RADIUS, 
@@ -124,32 +162,55 @@ public class GraphVisualizer {
         );
         selectedNode.setFillColor(Color.RED);
         canvas.add(selectedNode);
-
+    
         // Add user name
-        GraphicsText userName = new GraphicsText(user.getName(), userPoint.getX(), userPoint.getY());
+        GraphicsText userName = new GraphicsText(user.getName(), userPoint.getX(), userPoint.getY() - 10);
         userName.setFontSize(10);
         userName.setAnchor(userName.getCenter());
         canvas.add(userName);
-
-        // Draw the user's connections
-    for (Connection connection : network.getConnections(user)) {
-        User neighbor = connection.getUser2();
-        Point neighborPoint = userPositions.get(neighbor);
-
-        if (neighborPoint != null) {
-            // Draw a line between the user and their neighbor
-            Line connectionLine = new Line(userPoint, neighborPoint);
-            connectionLine.setStrokeWidth(2);
-            connectionLine.setStrokeColor(Color.BLUE);
+    
+        // Draw connections and highlight connected users
+        for (Connection connection : network.getConnections(user)) {
+            User neighbor = connection.getUser2();
+            Point neighborPoint = userPositions.get(neighbor);
+            
+            // Draw connection line
+            Line connectionLine = new Line(
+                userPoint.getX(), userPoint.getY(),
+                neighborPoint.getX(), neighborPoint.getY()
+            );
+            connectionLine.setStrokeColor(Color.BLACK);
             canvas.add(connectionLine);
+    
+            // Highlight the connected user
+            Ellipse neighborNode = new Ellipse(
+                neighborPoint.getX() - NODE_RADIUS,
+                neighborPoint.getY() - NODE_RADIUS,
+                2 * NODE_RADIUS,
+                2 * NODE_RADIUS
+            );
+            neighborNode.setFillColor(Color.BLUE);
+            canvas.add(neighborNode);
+    
+            // Add neighbor's name
+            GraphicsText neighborName = new GraphicsText(neighbor.getName(), neighborPoint.getX(), neighborPoint.getY() - 10);
+            neighborName.setFontSize(10);
+            neighborName.setAnchor(neighborName.getCenter());
+            canvas.add(neighborName);
 
-            // Optionally, add the weight of the connection
-            double midX = (userPoint.getX() + neighborPoint.getX()) / 2;
-            double midY = (userPoint.getY() + neighborPoint.getY()) / 2;
-            GraphicsText connectionWeight = new GraphicsText(String.valueOf(connection.getWeight()), midX, midY);
-            connectionWeight.setFontSize(10);
-            connectionWeight.setAnchor(connectionWeight.getCenter());
-            canvas.add(connectionWeight);
+             // Optionally, add the weight of the connection
+             double midX = (userPoint.getX() + neighborPoint.getX()) / 2;
+             double midY = (userPoint.getY() + neighborPoint.getY()) / 2;
+             GraphicsText connectionWeight = new GraphicsText(String.valueOf(connection.getWeight()), midX, midY);
+             connectionWeight.setFontSize(10);
+             connectionWeight.setAnchor(connectionWeight.getCenter());
+             canvas.add(connectionWeight);
+        }
     }
+    
+
+    
+
+  
+
 }
-    }}
