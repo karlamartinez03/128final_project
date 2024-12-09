@@ -7,6 +7,7 @@ public class Main {
         String csvFile = "student-dataset.csv"; // Path to the dataset
         SocialNetwork network = new SocialNetwork();
 
+
         // Step 1: Load data from the CSV
         try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
             String line;
@@ -74,6 +75,8 @@ public class Main {
 
         GraphVisualizer visualizer = new GraphVisualizer();
         visualizer.visualizeGraphically(network);
+
+        analyzer.displayLeaderboard();
 
     }
 }
