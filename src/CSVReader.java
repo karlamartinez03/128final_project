@@ -10,8 +10,8 @@ public class CSVReader {
         this.filePath = filePath;
     }
 
-    public HashMap<String, User> parseUsers() {
-        HashMap<String, User> users = new HashMap<>();
+    public HashMap<Integer, User> parseUsers() {
+        HashMap<Integer, User> users = new HashMap<>();
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             String headerLine = br.readLine(); // Read the header line
             if (headerLine == null) {
@@ -23,7 +23,7 @@ public class CSVReader {
                 String[] fields = line.split(",");
                 
                 // Parse fields
-                String id = fields[0];
+                int id = Integer.parseInt(fields[0]);
                 String name = fields[1];
                 String nationality = fields[2];
                 String city = fields[3];

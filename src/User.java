@@ -1,6 +1,3 @@
-import java.util.HashMap;
-import java.util.Map;
-
 public class User {
     private int id;
     private String name;
@@ -18,12 +15,14 @@ public class User {
     private int portfolioRating;
     private int coverLetterRating;
     private int refLetterRating;
+    private int connectionCount;
 
     // Constructor
     public User(int id, String name, String nationality, String city, double latitude, double longitude,
                 String gender, String ethnicGroup, int age, double englishGrade, double mathGrade,
                 double sciencesGrade, double languageGrade, int portfolioRating, int coverLetterRating,
                 int refLetterRating) {
+
         this.id = id;
         this.name = name;
         this.nationality = nationality;
@@ -40,6 +39,17 @@ public class User {
         this.portfolioRating = portfolioRating;
         this.coverLetterRating = coverLetterRating;
         this.refLetterRating = refLetterRating;
+        this.connectionCount = 0;
+    }
+
+     // Getter for connection count
+     public int getConnectionCount() {
+        return connectionCount;
+    }
+
+    // Setter for connection count
+    public void setConnectionCount(int connectionCount) {
+        this.connectionCount = connectionCount;
     }
 
     // Getter methods
@@ -129,5 +139,34 @@ public class User {
                 '}';
     }
 }
+
+//OLD CLASSES _______________________ _________________________
+// public class User {
+//     private String id;
+//    private String name;
+//    private Map<String, String> metadata; // e.g., "location" -> "New York"
+
+//    public User(String id, String name) {
+//        this.id = id;
+//        this.name = name;
+//        this.metadata = new HashMap<>();
+//    }
+
+//    public String getId() {
+//        return id;
+//    }
+
+//    public String getName() {
+//        return name;
+//    }
+
+//    public void addMetadata(String key, String value) {
+//        metadata.put(key, value);
+//    }
+
+//    public String getMetadata(String key) {
+//        return metadata.getOrDefault(key, "Unknown");
+//    }
+// }
 
 

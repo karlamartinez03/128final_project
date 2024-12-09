@@ -1,34 +1,8 @@
-// public class GraphVisualizer {
-//     // A method to visualize the network in a basic way (console-based or simple display)
-//     public void displayNetwork(SocialNetwork network) {
-//         // For simplicity, just print out users and their connections
-//         System.out.println("Displaying Network:");
-
-//         for (User user : network.getUsers()) {
-//             System.out.println(user.getName() + " (" + user.getId() + "):");
-
-//             for (Connection conn : network.getConnections(user)) {
-//                 System.out.println("  - Connected to " + conn.getUser2().getName() + " with weight " + conn.getWeight());
-//             }
-//         }
-//     }
-
-//     // Placeholder for graphical visualization (e.g., using JavaFX or Graphviz)
-//     public void visualizeGraphically(SocialNetwork network) {
-//         // Implement graphical visualization using JavaFX or another library here
-//         System.out.println("Graphical visualization of the network would go here.");
-//     }
-
-// }
 import edu.macalester.graphics.*;
 import edu.macalester.graphics.events.*;
 
 import java.awt.Color;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
 public class GraphVisualizer {
@@ -38,11 +12,12 @@ public class GraphVisualizer {
     private static final int LEADERBOARD_WIDTH = 200;
     private static final int LEADERBOARD_HEIGHT = 150;
 
+
     // Method to create a graphical visualization
     public void visualizeGraphically(SocialNetwork network) {
-        CanvasWindow canvas = new CanvasWindow("Social Network Graph", WIDTH, HEIGHT);
         HashMap<User, Point> userPositions = new HashMap<>();
         Random random = new Random();
+        CanvasWindow canvas = new CanvasWindow("Social Network Graph", WIDTH, HEIGHT);
 
         // Step 1: Generate random positions for users
         for (User user : network.getUsers()) {
@@ -78,7 +53,7 @@ public class GraphVisualizer {
 
         // Draw leaderboard
         NetworkAnalyzer leaderboard = new NetworkAnalyzer(network);
-        leaderboard.displayLeaderboard(canvas, LEADERBOARD_WIDTH, LEADERBOARD_HEIGHT);
+        leaderboard.displayLeaderboard(canvas, LEADERBOARD_WIDTH, LEADERBOARD_HEIGHT); //WE WILL BE BACK
         
 
         // Step 3: Draw user nodes
@@ -222,3 +197,27 @@ public class GraphVisualizer {
     }
 
 }
+
+//OLD CLASSES ______________ _______________
+// public class GraphVisualizer {
+//     // A method to visualize the network in a basic way (console-based or simple display)
+//     public void displayNetwork(SocialNetwork network) {
+//         // For simplicity, just print out users and their connections
+//         System.out.println("Displaying Network:");
+
+//         for (User user : network.getUsers()) {
+//             System.out.println(user.getName() + " (" + user.getId() + "):");
+
+//             for (Connection conn : network.getConnections(user)) {
+//                 System.out.println("  - Connected to " + conn.getUser2().getName() + " with weight " + conn.getWeight());
+//             }
+//         }
+//     }
+
+//     // Placeholder for graphical visualization (e.g., using JavaFX or Graphviz)
+//     public void visualizeGraphically(SocialNetwork network) {
+//         // Implement graphical visualization using JavaFX or another library here
+//         System.out.println("Graphical visualization of the network would go here.");
+//     }
+
+// }
