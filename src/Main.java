@@ -23,7 +23,7 @@ public class Main {
                 String name1 = values[1].trim();
                 String id2 = values[2].trim();
                 String name2 = values[3].trim();
-                double weight = Double.parseDouble(values[4].trim()); // Changed to double
+                double weight = Double.parseDouble(values[4].trim()); //CHANGE SO THAT IS NOT BY LATITUDE BUT BY DIFFERENT CHARARTSIC
         
                 User user1 = network.getUsers().stream()
                         .filter(u -> u.getId().equals(id1))
