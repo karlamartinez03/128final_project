@@ -2,14 +2,44 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class User {
-     private String id;
+    private int id;
     private String name;
-    private Map<String, String> metadata; // e.g., "location" -> "New York"
+    private String nationality;
+    private String city;
+    private double latitude;
+    private double longitude;
+    private String gender;
+    private String ethnicGroup;
+    private int age;
+    private double englishGrade;
+    private double mathGrade;
+    private double sciencesGrade;
+    private double languageGrade;
+    private int portfolioRating;
+    private int coverLetterRating;
+    private int refLetterRating;
 
-    public User(String id, String name) {
+    // Constructor
+    public User(int id, String name, String nationality, String city, double latitude, double longitude,
+                String gender, String ethnicGroup, int age, double englishGrade, double mathGrade,
+                double sciencesGrade, double languageGrade, int portfolioRating, int coverLetterRating,
+                int refLetterRating) {
         this.id = id;
         this.name = name;
-        this.metadata = new HashMap<>();
+        this.nationality = nationality;
+        this.city = city;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.gender = gender;
+        this.ethnicGroup = ethnicGroup;
+        this.age = age;
+        this.englishGrade = englishGrade;
+        this.mathGrade = mathGrade;
+        this.sciencesGrade = sciencesGrade;
+        this.languageGrade = languageGrade;
+        this.portfolioRating = portfolioRating;
+        this.coverLetterRating = coverLetterRating;
+        this.refLetterRating = refLetterRating;
     }
 
     // Getter methods
@@ -98,24 +128,6 @@ public class User {
                 ", refLetterRating=" + refLetterRating +
                 '}';
     }
-
-    public void setConnectionCount(int count) {
-        this.connectionCount = count;
-    }
-
-    public int getConnectionCount() {
-        return connectionCount;
-    }
-
-    @Override
-    public int compareTo(User other) {
-        return Integer.compare(other.connectionCount, this.connectionCount);
-    }
-
-    @Override
-    public String toString() {
-        return String.format("%s (Connections: %d)", name, connectionCount);
-    }
-
 }
+
 
