@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -6,6 +7,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Set;
+
+import edu.macalester.graphics.CanvasWindow;
+import edu.macalester.graphics.GraphicsText;
+import edu.macalester.graphics.Rectangle;
 
 public class NetworkAnalyzer {
     private SocialNetwork network;
@@ -79,47 +84,44 @@ public class NetworkAnalyzer {
         return topUsers;
     }
 
-    public void displayLeaderboard() {
-        PriorityQueue<User> pq = new PriorityQueue<>(); // Max-heap due to `Comparable` in User class
-
-        // calculate degree centrality and populate priority queue
-        for (User user : network.getUsers()) {
-            int connectionCount = network.getConnections(user).size();
-            user.setConnectionCount(connectionCount); 
-            pq.offer(user);
-        }
+    public void displayLeaderboard(CanvasWindow canvas, int leaderWidth, int leaderHeight) {
+        List<User> topUsers = getLeaderboard();
 
         // display the top users
         System.out.println("Leaderboard (Top Users by Connections):");
-        int rank = 0;
-        int lastCount = -1;
-        int displayedCount = 0;
-        // List<User> ties = new ArrayList<>();
+        Rectangle leaderboardBackground = new Rectangle(10, 10, leaderWidth, leaderHeight);
+        leaderboardBackground.setFillColor(new Color(0, 0, 0, 50)); // Semi-transparent black
+        leaderboardBackground.setStrokeColor(Color.BLACK);
+        canvas.add(leaderboardBackground);
 
-        while (!pq.isEmpty() && displayedCount < 5) {
-            User user = pq.poll();
+        // Title text
+        GraphicsText title = new GraphicsText("Leaderboard", 15, 30);
+        title.setFontSize(14);
+        title.setFillColor(Color.WHITE);
+        canvas.add(title);
 
-            // // Handle ties
-            // if (lastCount == -1 || user.getConnectionCount() == lastCount || rank <= 5) {
-            //     ties.add(user);
-            //     lastCount = user.getConnectionCount();
-            // } else {
-            //     break;
-            // }
+        // Display the top users with ranks
+    int yOffset = 50; // Starting y-offset for user entries
+    int rank = 1;
+    int lastConnectionCount = -1;
 
-            // rank++;
-            if (user.getConnectionCount() != lastCount) {
-                rank = displayedCount + 1; 
-                lastCount = user.getConnectionCount(); 
-            }
-            System.out.printf("#%d: %s%n", rank, user);
-            displayedCount++;
+    for (User user : topUsers) {
+        // Handle ties in ranking
+        if (user.getConnectionCount() != lastConnectionCount) {
+            lastConnectionCount = user.getConnectionCount();
         }
 
-        // Print all tied users in the top ranks
-    
-    
+        // Construct leaderboard entry text
+        String entryText = rank + ". " + user.getName() + " (" + user.getConnectionCount() + ")";
+        GraphicsText userText = new GraphicsText(entryText, 20, yOffset);
+        userText.setFontSize(14);
+        userText.setFillColor(Color.WHITE);
+        canvas.add(userText);
+
+        yOffset += 25; // Increment y-offset for the next entry
+        rank++;
     }
+}
     
 }
 

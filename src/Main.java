@@ -76,7 +76,6 @@ public class Main {
         GraphVisualizer visualizer = new GraphVisualizer();
         visualizer.visualizeGraphically(network);
 
-        analyzer.displayLeaderboard();
 
     }
 }

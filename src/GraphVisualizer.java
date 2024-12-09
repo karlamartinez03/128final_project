@@ -24,13 +24,19 @@ import edu.macalester.graphics.*;
 import edu.macalester.graphics.events.*;
 
 import java.awt.Color;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 public class GraphVisualizer {
     private static final int WIDTH = 800;
     private static final int HEIGHT = 600;
     private static final double NODE_RADIUS = 20;
+    private static final int LEADERBOARD_WIDTH = 200;
+    private static final int LEADERBOARD_HEIGHT = 150;
 
     // Method to create a graphical visualization
     public void visualizeGraphically(SocialNetwork network) {
@@ -67,6 +73,13 @@ public class GraphVisualizer {
                 canvas.add(weightText);
             }
         }
+
+
+
+        // Draw leaderboard
+        NetworkAnalyzer leaderboard = new NetworkAnalyzer(network);
+        leaderboard.displayLeaderboard(canvas, LEADERBOARD_WIDTH, LEADERBOARD_HEIGHT);
+        
 
         // Step 3: Draw user nodes
         for (User user : network.getUsers()) {
@@ -207,10 +220,5 @@ public class GraphVisualizer {
              canvas.add(connectionWeight);
         }
     }
-    
-
-    
-
-  
 
 }
