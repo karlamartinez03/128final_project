@@ -116,6 +116,34 @@ public class NetworkAnalyzer {
         }
     }
 
+    // Group users by refletter.rating
+    public Map<String, List<User>> createClusters(List<User> users) {
+        Map<String, List<User>> clusters = new HashMap<>();
+
+        // Define ranges for clusters (e.g., 0-2, 2.1-3, 3.1-5)
+        for (User user : users) {
+            double rating = user.getRefLetterRating();
+            String clusterKey = getClusterKey(rating);
+
+            clusters.putIfAbsent(clusterKey, new ArrayList<>());
+            clusters.get(clusterKey).add(user);
+        }
+
+        return clusters;
+    }
+
+    // Determine the cluster key based on refletter rating
+    private String getClusterKey(double rating) {
+        if (rating <= 2.0) {
+            return "Low";
+        } else if (rating <= 3.5) {
+            return "Medium";
+        } else {
+            return "High";
+        }
+    }
+
+
 }
 
 //OLD CLASSES AND METHODS ___________________ ______________________

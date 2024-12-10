@@ -24,7 +24,7 @@ public class Main {
                 int id1 = Integer.parseInt(values[0].trim());
                 String name1 = values[1].trim();
 
-                int id2 = Integer.parseInt(values[15].trim()); //DOES 15 ACTUALLY WORK, WELL IT SHOULD NOT
+                int id2 = Integer.parseInt(values[8].trim()); //DOES 15 ACTUALLY WORK, WELL IT SHOULD NOT
                 String name2 = values[3].trim();
 
                 double weight = Double.parseDouble(values[4].trim()); //CHANGE SO THAT IS NOT BY LATITUDE BUT BY DIFFERENT CHARARTSIC
