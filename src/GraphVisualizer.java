@@ -18,6 +18,9 @@ public class GraphVisualizer {
         HashMap<User, Point> userPositions = new HashMap<>();
         Random random = new Random();
         CanvasWindow canvas = new CanvasWindow("Social Network Graph", WIDTH, HEIGHT);
+        NetworkAnalyzer leaderboard = new NetworkAnalyzer(network);
+
+        leaderboard.displayLeaderboard(canvas, LEADERBOARD_WIDTH, LEADERBOARD_HEIGHT); 
 
         // Step 1: Generate random positions for users
         for (User user : network.getUsers()) {
@@ -52,8 +55,7 @@ public class GraphVisualizer {
 
 
         // Draw leaderboard
-        NetworkAnalyzer leaderboard = new NetworkAnalyzer(network);
-        leaderboard.displayLeaderboard(canvas, LEADERBOARD_WIDTH, LEADERBOARD_HEIGHT); //WE WILL BE BACK
+
         
 
         // Step 3: Draw user nodes
@@ -80,18 +82,19 @@ public class GraphVisualizer {
         // Step 4: Add interactivity (e.g., mouse click to highlight a node)
         canvas.onMouseDown(event -> 
         
-            handleMouseClick(event, userPositions, canvas, network));
+            handleMouseClick(event, userPositions, canvas, network, leaderboard));
     }
 
     private boolean isFilteredView = false; // Tracks whether we're in filtered or full view
 
-    private void handleMouseClick(MouseButtonEvent event, HashMap<User, Point> userPositions, CanvasWindow canvas, SocialNetwork network) {
+    private void handleMouseClick(MouseButtonEvent event, HashMap<User, Point> userPositions, CanvasWindow canvas, SocialNetwork network, NetworkAnalyzer leaderboard) {
         Point clickPoint = new Point(event.getPosition().getX(), event.getPosition().getY());
     
         if (isFilteredView) {
             // Reset to full view
             canvas.removeAll();
             drawGraph(userPositions, network, canvas);
+            leaderboard.displayLeaderboard(canvas, LEADERBOARD_WIDTH, LEADERBOARD_HEIGHT);
             isFilteredView = false;
             return;
         }
@@ -103,6 +106,7 @@ public class GraphVisualizer {
             if (distance <= NODE_RADIUS) {
                 // Highlight the selected user and their connections
                 canvas.removeAll();
+                leaderboard.displayLeaderboard(canvas, LEADERBOARD_WIDTH, LEADERBOARD_HEIGHT); 
                 highlightUser(user, userPositions, canvas, network);
                 isFilteredView = true;
                 return;
