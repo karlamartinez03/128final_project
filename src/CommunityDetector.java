@@ -2,6 +2,13 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
+
+/* Data structure utilized -> HASH MAP why?: Fast Lookups: A HashMap allows for constant-time average lookups (O(1)) when querying or updating the parent of a user.
+Flexibility: It can dynamically grow as new users are added.
+Ease of Use: Mapping users to their parents is straightforward with a HashMap
+
+ * This class is used to get the community
+ */
 public class CommunityDetector {
     private HashMap<User, User> parent;
 

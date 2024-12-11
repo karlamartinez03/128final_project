@@ -34,28 +34,3 @@ public class SocialNetwork {
     }
 }
 
-
-// public class SocialNetwork {
-//     private final Map<User, Set<User>> connections = new HashMap<>();
-
-//     public void addUser(User user) {
-//         connections.putIfAbsent(user, new HashSet<>());
-//     }
-
-//     public void addConnection(User user1, User user2) {
-//         if (!connections.containsKey(user1) || !connections.containsKey(user2)) {
-//             throw new IllegalArgumentException("Both users must be in the network.");
-//         }
-//         connections.get(user1).add(user2);
-//         connections.get(user2).add(user1); // Assuming bidirectional connections
-//     }
-
-//     public Set<User> getConnections(User user) {
-//         return connections.getOrDefault(user, new HashSet<>());
-//     }
-
-//     public Set<User> getAllUsers() {
-//         return connections.keySet();
-//     }
-// }
-
