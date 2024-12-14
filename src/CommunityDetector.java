@@ -2,13 +2,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
-
-/* Data structure utilized -> HASH MAP why?: Fast Lookups: A HashMap allows for constant-time average lookups (O(1)) when querying or updating the parent of a user.
-Flexibility: It can dynamically grow as new users are added.
-Ease of Use: Mapping users to their parents is straightforward with a HashMap
-
- * This class is used to get the community
- */
 public class CommunityDetector {
     private HashMap<User, User> parent;
 
@@ -17,14 +10,18 @@ public class CommunityDetector {
         for (User user : users) {
             parent.put(user, user);
         }
-    }
+    } 
+    //Hash map the maps a singular user to the whole users in the hashmap
 
     public User find(User user) {
         if (!parent.get(user).equals(user)) {
-            parent.put(user, find(parent.get(user))); // Path compression
+            parent.put(user, find(parent.get(user))); 
         }
         return parent.get(user);
     }
+    //If the when the hash map tries to get the user and it does not equal the user
+    //Then the parent should but the user as the key and assign the value until the parents.get.user = user
+    //if the parents it is in the hash map then the hashmap will get the user
 
     public void union(User user1, User user2) {
         User root1 = find(user1);
@@ -33,6 +30,7 @@ public class CommunityDetector {
             parent.put(root1, root2);
         }
     }
+    //if the users are not identical then you should put user one, with value of where you found user 2
 
     public HashMap<User, Set<User>> getCommunities() {
         HashMap<User, Set<User>> communities = new HashMap<>();

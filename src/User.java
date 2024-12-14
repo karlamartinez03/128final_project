@@ -1,58 +1,35 @@
+/*
+ * User class to collect the user's characteristics and their connection count
+ */
 public class User {
+
     private int id;
     private String name;
     private String nationality;
     private String city;
-    private double latitude;
-    private double longitude;
-    private String gender;
-    private String ethnicGroup;
     private int age;
-    private double englishGrade;
     private double mathGrade;
-    private double sciencesGrade;
-    private double languageGrade;
-    private int portfolioRating;
-    private int coverLetterRating;
-    private int refLetterRating;
     private int connectionCount;
+    private double pageRankScore;
 
     // Constructor
-    public User(int id, String name, String nationality, String city, double latitude, double longitude,
-                String gender, String ethnicGroup, int age, double englishGrade, double mathGrade,
-                double sciencesGrade, double languageGrade, int portfolioRating, int coverLetterRating,
-                int refLetterRating) {
+    public User(int id, String name, String nationality, String city, int age) {
 
         this.id = id;
         this.name = name;
         this.nationality = nationality;
         this.city = city;
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.gender = gender;
-        this.ethnicGroup = ethnicGroup;
         this.age = age;
-        this.englishGrade = englishGrade;
-        this.mathGrade = mathGrade;
-        this.sciencesGrade = sciencesGrade;
-        this.languageGrade = languageGrade;
-        this.portfolioRating = portfolioRating;
-        this.coverLetterRating = coverLetterRating;
-        this.refLetterRating = refLetterRating;
-        this.connectionCount = 0;
     }
 
-     // Getter for connection count
-     public int getConnectionCount() {
+    public int getConnectionCount() {
         return connectionCount;
     }
 
-    // Setter for connection count
     public void setConnectionCount(int connectionCount) {
         this.connectionCount = connectionCount;
     }
 
-    // Getter methods
     public int getId() {
         return id;
     }
@@ -69,53 +46,17 @@ public class User {
         return city;
     }
 
-    public double getLatitude() {
-        return latitude;
-    }
-
-    public double getLongitude() {
-        return longitude;
-    }
-
-    public String getGender() {
-        return gender;
-    }
-
-    public String getEthnicGroup() {
-        return ethnicGroup;
-    }
 
     public int getAge() {
         return age;
     }
 
-    public double getEnglishGrade() {
-        return englishGrade;
-    }
 
     public double getMathGrade() {
         return mathGrade;
     }
 
-    public double getSciencesGrade() {
-        return sciencesGrade;
-    }
 
-    public double getLanguageGrade() {
-        return languageGrade;
-    }
-
-    public int getPortfolioRating() {
-        return portfolioRating;
-    }
-
-    public int getCoverLetterRating() {
-        return coverLetterRating;
-    }
-
-    public int getRefLetterRating() {
-        return refLetterRating;
-    }
 
     @Override
     public String toString() {
@@ -124,22 +65,17 @@ public class User {
                 ", name='" + name + '\'' +
                 ", nationality='" + nationality + '\'' +
                 ", city='" + city + '\'' +
-                ", latitude=" + latitude +
-                ", longitude=" + longitude +
-                ", gender='" + gender + '\'' +
-                ", ethnicGroup='" + ethnicGroup + '\'' +
                 ", age=" + age +
-                ", englishGrade=" + englishGrade +
                 ", mathGrade=" + mathGrade +
-                ", sciencesGrade=" + sciencesGrade +
-                ", languageGrade=" + languageGrade +
-                ", portfolioRating=" + portfolioRating +
-                ", coverLetterRating=" + coverLetterRating +
-                ", refLetterRating=" + refLetterRating +
                 '}';
     }
+  
+
+    public double getPageRankScore() {
+        return pageRankScore;
+    }
+
+    public void setPageRankScore(double pageRankScore) {
+        this.pageRankScore = pageRankScore;
+    }
 }
-
-
-
-

@@ -4,7 +4,7 @@ import java.awt.*;
 import edu.macalester.graphics.*;
 import edu.macalester.graphics.Rectangle;
 
-//Data Structure used: Priority queues, Hash Map, 
+// Data Structure used: Priority queues, Hash Map,
 
 public class NetworkAnalyzer {
     private SocialNetwork socialNetwork;
@@ -21,101 +21,138 @@ public class NetworkAnalyzer {
         return centrality;
     }
 
-    public HashMap<User, Double> calculateShortestPaths(User start) {
-        HashMap<User, Double> distances = new HashMap<>();
-        PriorityQueue<Map.Entry<User, Double>> pq = new PriorityQueue<>(Map.Entry.comparingByValue());
-        Set<User> visited = new HashSet<>();
-    
-        for (User user : socialNetwork.getUsers()) {
-            distances.put(user, Double.MAX_VALUE); // Initialize with infinity
-        }
-        distances.put(start, 0.0); // Distance to start is 0
-        pq.offer(Map.entry(start, 0.0)); // Add start node to the priority queue
-    
-        while (!pq.isEmpty()) {
-            User current = pq.poll().getKey(); // Get the user with the smallest distance
-            if (!visited.add(current)) continue;
-    
-            for (Connection conn : socialNetwork.getConnections(current)) {
-                User neighbor = conn.getUser2();
-                double newDist = distances.get(current) + conn.getWeight(); // Use double weights
-                if (!visited.contains(neighbor) && newDist < distances.get(neighbor)) {
-                    distances.put(neighbor, newDist);
-                    pq.offer(Map.entry(neighbor, newDist)); // Update the queue
-                }
-            }
-        }
-    
-        return distances;
-    }
-
-
     public List<User> getLeaderboard() {
-        // Calculate degree centrality for each user
-        HashMap<User, Integer> centrality = calculateDegreeCentrality();
+        NetworkAnalyzer analyzer = new NetworkAnalyzer(socialNetwork);
+        Map<User, Double> pageRankScores = analyzer.calculatePageRank(100, 0.85);
 
-        // Update connection count in each user object
-        for (Map.Entry<User, Integer> entry : centrality.entrySet()) {
-            entry.getKey().setConnectionCount(entry.getValue());
+        double totalScore = pageRankScores.values().stream().mapToDouble(Double::doubleValue).sum();
+
+        HashMap<User, Double> normalizedScores = new HashMap<>();
+        for (Map.Entry<User, Double> entry : pageRankScores.entrySet()) {
+            double percentage = (entry.getValue() / totalScore) * 100;
+            normalizedScores.put(entry.getKey(), percentage);
         }
 
-        // Sort the users by connection count in descending order
-        List<User> users = new ArrayList<>(centrality.keySet());
-        users.sort(Comparator.comparingInt(User::getConnectionCount).reversed());
+        // Sort users by their PageRank percentage in descending order
+        List<User> users = new ArrayList<>(normalizedScores.keySet());
+        users.sort((u1, u2) -> Double.compare(normalizedScores.get(u2), normalizedScores.get(u1)));
 
-        // Create a list of top users with ties handled
+        // Select the top 5 users or those with tied scores
         List<User> topUsers = new ArrayList<>();
         int rank = 1;
-        int lastCount = -1;
+        double lastScore = -1;
 
         for (User user : users) {
-            if (rank > 5 && user.getConnectionCount() != lastCount) {
+            double userScore = normalizedScores.get(user);
+
+            if (rank > 5 && userScore != lastScore) {
                 break;
             }
+
+            user.setPageRankScore(userScore); // Store the PageRank score in the User object for display
             topUsers.add(user);
-            lastCount = user.getConnectionCount();
+            lastScore = userScore;
             rank++;
         }
 
         return topUsers;
+
     }
 
     public void displayLeaderboard(CanvasWindow canvas, int leaderWidth, int leaderHeight) {
+
         List<User> topUsers = getLeaderboard();
 
-        // Display leaderboard background
         Rectangle leaderboardBackground = new Rectangle(10, 10, leaderWidth, leaderHeight);
-        leaderboardBackground.setFillColor(new Color(0, 0, 0, 50)); // Semi-transparent black
+        leaderboardBackground.setFillColor(new Color(0, 0, 0, 50));
         leaderboardBackground.setStrokeColor(Color.BLACK);
         canvas.add(leaderboardBackground);
 
-        // Title text
         GraphicsText title = new GraphicsText("Leaderboard", 15, 30);
         title.setFontSize(14);
         title.setFillColor(Color.WHITE);
         canvas.add(title);
 
-        // Display the top users with ranks
-        int yOffset = 50; // Starting y-offset for user entries
+        int yOffset = 50;
         int rank = 1;
-        int lastConnectionCount = -1;
+        double lastScore = -1;
 
         for (User user : topUsers) {
-            // Handle ties in ranking
-            if (user.getConnectionCount() != lastConnectionCount) {
-                lastConnectionCount = user.getConnectionCount();
+            double userScore = user.getPageRankScore();
+
+            if (userScore != lastScore) {
+                lastScore = userScore;
             }
 
-            // Construct leaderboard entry text
-            String entryText = rank + ". " + user.getName() + " (" + user.getConnectionCount() + ")";
+            String entryText = rank + ". " + user.getName() + " (" + String.format("%.2f", userScore) + "%)";
             GraphicsText userText = new GraphicsText(entryText, 20, yOffset);
             userText.setFontSize(14);
             userText.setFillColor(Color.WHITE);
             canvas.add(userText);
 
-            yOffset += 25; // Increment y-offset for the next entry
+            yOffset += 25;
             rank++;
         }
     }
 
+    public Map<User, Double> calculatePageRank(int iterations, double dampingFactor) {
+        Map<User, Double> pageRank = new HashMap<>();
+        int totalUsers = socialNetwork.getUsers().size();
+        double initialScore = 1.0 / totalUsers;
+
+        for (User user : socialNetwork.getUsers()) {
+            pageRank.put(user, initialScore);
+        }
+
+        for (int i = 0; i < iterations; i++) {
+            Map<User, Double> newPageRank = new HashMap<>();
+
+            for (User user : socialNetwork.getUsers()) {
+                double rank = (1 - dampingFactor) / totalUsers;
+                for (Connection connection : socialNetwork.getConnections(user)) {
+                    User neighbor = connection.getUser2();
+                    double connectionWeight = connection.getWeight();
+                    double neighborRank = pageRank.get(neighbor);
+                    double totalConnections = socialNetwork.getConnections(neighbor).size();
+
+                    if (totalConnections > 0) {
+                        rank += dampingFactor * (neighborRank * connectionWeight / totalConnections);
+                    }
+                }
+                newPageRank.put(user, rank);
+            }
+
+            double totalRank = newPageRank.values().stream().mapToDouble(Double::doubleValue).sum();
+            for (Map.Entry<User, Double> entry : newPageRank.entrySet()) {
+                newPageRank.put(entry.getKey(), entry.getValue() / totalRank);
+            }
+
+            pageRank = newPageRank;
+        }
+
+        return pageRank;
+    }
+
+
+    public double calculateWeight(User user1, User user2) {
+        // Example similarity calculation (customize as needed):
+        double weight = 0.0;
+
+        // Compare nationality
+        if (user1.getNationality().equals(user2.getNationality())) {
+            weight += 1.0;
+        }
+        // Compare grades (example: math grade similarity)
+        // weight += 1.0 / (1 + Math.abs(user1.getMathGrade() - user2.getMathGrade()));
+        if (user1.getAge() == user2.getAge()) {
+            weight += 1.0;
+        }
+         // Compare city
+         if (user1.getCity().equals(user2.getCity())) {
+            weight += 1.0;
+        }
+
+        return weight;
+    }
 }
+
